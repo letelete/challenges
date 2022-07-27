@@ -1,5 +1,7 @@
 <template>
-  <div class="container" :class="`container--${props.type}`"></div>
+  <div class="container" :class="`container--${props.type}`">
+    <slot />
+  </div>
 </template>
 
 <script setup lang="ts">
