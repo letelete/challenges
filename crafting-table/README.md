@@ -1,52 +1,35 @@
 # challenge-crafting-table
 
-This template should help get you started developing with Vue 3 in Vite.
+Implemented my own idea to the problem of finding an item by the recipe.
 
-## Recommended IDE Setup
+An idea is to firstly create a 2D grid N x M with the minimal possible N, and M based on
+the given recipe, and with each cell that is either empty or contain an item
+from the recipe.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+This can be done in the following steps:
+1. Sort items by the row and the column they are in (with a priority set on row)
+2. Find min-top min-left max-bottom max-right items' positions in the
+   recipe
+3. Construct the grid, by remapping recipe items to grid edges, and marking
+   all non-item cells as empty
 
-## Type Support for `.vue` Imports in TS
+Loop over the grid from top to bottom, left to the right,  by maintaining rows/columns data.
+The generated hash is generated in the following way:
+1. Create a hash string 'X', initially empty
+2. If cell is empty, append "#" to X
+3. Else if cell contains an item, append "<item.id>;" to X
+4. Additionally, If end of row, append "|" to X
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+Example:
+Given grid 4x4:
+c - id for the Coal item
+s - id for the Stick item
+.  .  .
+.  c  .
+.  s  .
+.  .  .
+Trimmed grid:
+c
+s
+Hash:
+c;|s;
